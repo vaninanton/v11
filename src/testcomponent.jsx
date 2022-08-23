@@ -1,6 +1,7 @@
 /* eslint-disable default-case */
 /* eslint-disable import/no-anonymous-default-export */
 
+import { Button } from '@alfalab/core-components/button';
 import { useState } from "react";
 
 function checksum(check, val) {
@@ -120,7 +121,7 @@ export default function () {
           setTimeout(() => {
             euc.send(euc.cmd("stats"));
           }, 100);
-        }, 500);
+        }, 5000);
 
         // euc.send(euc.cmd("live"));
 
@@ -139,7 +140,7 @@ export default function () {
   euc.parseStatsData = function (value) {
     setMileage(value.getInt32(5, true) / 100);
   };
-  
+
   euc.parseLiveData = function (value) {
     setVoltage(value.getInt16(5, true) / 100);
   };
@@ -165,19 +166,40 @@ export default function () {
   return (
     <div className="row">
       <div className="col">
-        <button className="btn btn-primary" onClick={euc.connect}>Подключиться</button>
+        <Button
+          view="primary"
+          onClick={euc.connect}
+        >
+          Подключиться
+        </Button>
       </div>
+      {(euc.service) &&
+        <div className="col">
+          <div className="row">
+            <div className="col">
+              <Button block={true} size="s" onClick={() => euc.send(euc.cmd('lightsOn'))}>
+                Включить фару
+              </Button>
+            </div>
+            <div className="col">
+              <Button block={true} size="s" onClick={() => euc.send(euc.cmd('lightsOff'))}>
+                Выключить фару
+              </Button>
+            </div>
+          </div>
+        </div>
+      }
+
       <div className="col">
-        <button className="btn btn-secondary" onClick={() => euc.send(euc.cmd('lightsOn'))}>Включить фару</button>
-        <button className="btn btn-secondary" onClick={() => euc.send(euc.cmd('lightsOff'))}>Выключить фару</button>
-      </div>
-      <div className="col">
-        <button className="btn btn-secondary" onClick={() => euc.send(euc.cmd('stats'))}>stats</button>
-        <button className="btn btn-secondary" onClick={() => euc.send(euc.cmd('live'))}>live</button>
-      </div>
-      <div className="col">
-        <div>{ mileage } km</div>
-        <div>{ voltage } V</div>
+        <div>
+          {(mileage !== 0) &&
+            <div>{mileage} km</div>
+          }
+          {(voltage !== 0) &&
+            <div>{voltage.toFixed(2)} V</div>
+          }
+          {/* <CircularProgressBar value={84 / 100 * voltage} ></CircularProgressBar> */}
+        </div>
       </div>
     </div>
   );

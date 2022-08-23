@@ -1,11 +1,12 @@
 import './App.css';
-import Testcomponent from './testcomponent';
+import Decoder from './Decoder';
+import V11 from './V11';
 
 function App() {
   return (
     <div className="container">
-      <h1>Inmotion V11</h1>
-      <Testcomponent></Testcomponent>
+      <V11></V11>
+      <Decoder></Decoder>
     </div>
   );
 }
